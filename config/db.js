@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+// const local_db_conn = 'mongodb://localhost/node_user_auth_db';
+
 const connectDB = async () => {
   const conn = await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
