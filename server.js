@@ -13,7 +13,7 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 // Route files
-
+const todosRouter = require('./routes/todos.route');
 
 const app = express();
 
@@ -28,7 +28,7 @@ if (process.env.APP_ENV === 'development') {
 }
 
 // Mount routers
-
+app.use('/api/v1/todos', todosRouter);
 
 // Handle errors
 app.use(errorHandler);
