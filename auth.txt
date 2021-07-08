@@ -1,0 +1,24 @@
+Each Todo will have an owner
+
+Todo routes:
+POST    /todos      create      logged in user can create ------------------------- protect
+GET     /todos      get all     anyone can get all
+GET     /todos/:id  get one     anyone can get one
+PUT     /todos/:id  update      logged in user and owner can update --------------- protect, authorize(owner)
+DELETE  /todos/:id  delete      logged in user and owner can delete --------------- protect, authorize(owner)
+
+User routes:
+POST    /users      create      logged in admin can create ------------------------ protect, authorize(admin)
+GET     /users      get all     logged in admin can get all ----------------------- protect, authorize(admin)
+GET     /users/:id  get one     logged in admin can get one ----------------------- protect, authorize(admin)
+PUT     /users/:id  update      logged in admin can update ------------------------ protect, authorize(admin)
+DELETE  /users/:id  delete      logged in admin can delete ------------------------ protect, authorize(admin)
+
+Auth routes;
+POST    /register                   anyone can register
+POST    /login                      anyone can login with correct credentials
+GET     /me                         logged in user can get ------------------------ protect
+PUT     /updatedetails              logged in user can update details ------------- protect
+PUT     /changepassword             logged in user can change password ------------ protect
+POST    /forgotpassword             anyone can access
+PUT     /resetpassword/:resettoken  anyone can access
