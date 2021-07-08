@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
   fullName: {
@@ -62,5 +63,15 @@ UserSchema.pre('save', async function (next) {
   const salt = await bcryptjs.genSalt(10); // 10 is recommended
   this.password = await bcryptjs.hash(this.password, salt);
 });
+
+// Sign JWT and return
+// Needed while registering a new user
+UserSchema.methods.getSignedJwtToken = function () {
+  return jwt.sign(
+    { id: this._id }, // payload
+    process.env.JWT_SECRET, // token secret
+    { expiresIn: process.env.JWT_EXPIRE } // token expire in
+  );
+}
 
 module.exports = mongoose.model('User', UserSchema);

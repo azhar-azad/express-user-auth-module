@@ -15,7 +15,7 @@ PUT     /users/:id  update      logged in admin can update ---------------------
 DELETE  /users/:id  delete      logged in admin can delete ------------------------ protect, authorize(admin)
 
 Auth routes;
-POST    /register                   anyone can register
+POST    /register                   anyone can register [Can't register a user with admin role. Admin role can only be created in the database]
 POST    /login                      anyone can login with correct credentials
 GET     /me                         logged in user can get ------------------------ protect
 PUT     /updatedetails              logged in user can update details ------------- protect

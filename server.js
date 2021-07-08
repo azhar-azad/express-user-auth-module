@@ -13,6 +13,7 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 // Route files
+const authRouter = require('./routes/auth.route');
 const todosRouter = require('./routes/todos.route');
 
 const app = express();
@@ -28,6 +29,7 @@ if (process.env.APP_ENV === 'development') {
 }
 
 // Mount routers
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/todos', todosRouter);
 
 // Handle errors
