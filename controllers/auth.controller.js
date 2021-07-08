@@ -23,6 +23,38 @@ exports.register = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
+/**
+ *  @desc   Login user
+ *  @method POST
+ *  @route  /api/v1/auth/login
+ *  @access Public
+ * */
+exports.login = asyncHandler(async (req, res, next) => {
+  let { email, password } = req.body;
+
+  // Validate email & password
+  if (!email || !password) {
+    return next(new ErrorResponse('Please provide an email or username and password', 400));
+  }
+
+  // Check for user by email
+  // While retrieving user select password field too for validation
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) {
+    return next(new ErrorResponse('Invalid credentials', 401));
+  }
+
+  // Check if password matches
+  const isMatched = await user.matchPassword(password);
+
+  if (!isMatched) {
+    return next(new ErrorResponse('Invalid credentials', 401));
+  }
+
+  sendTokenResponse(user, 200, res);
+});
+
 
 // Get token from model, create cookie and send response
 // This is just a helper function

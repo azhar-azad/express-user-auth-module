@@ -4,7 +4,7 @@ const errorHandler = (err, req, res, next) => {
   // Copying all properties of 'err' to 'error' using spread operator.
   let error = { ...err };
 
-  // error.message = err.message;
+  error.message = err.message;
 
   // Log to console for dev
   console.log(err);
