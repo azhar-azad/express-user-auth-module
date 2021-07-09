@@ -72,4 +72,6 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcryptjs.compare(enteredPassword, this.password);
 }
 
+// Todo: Cascade delete todos when an user is deleted
+
 module.exports = mongoose.model('User', UserSchema);

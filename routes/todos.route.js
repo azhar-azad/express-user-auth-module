@@ -13,12 +13,12 @@ const advancedResults = require('../middlewares/advancedResults');
 const router = require('express').Router();
 
 router.route('/')
-  .get(advancedResults(Todo), getTodos)
-  .post(protect, createTodo);
+  .get(advancedResults(Todo, 'user'), getTodos)
+  .post(protect, authorize('user', 'admin'), createTodo);
 
 router.route('/:id')
   .get(getTodo)
-  .put(protect, updateTodo)
-  .delete(protect, deleteTodo);
+  .put(protect, authorize('user', 'admin'), updateTodo)
+  .delete(protect, authorize('user', 'admin'), deleteTodo);
 
 module.exports = router;

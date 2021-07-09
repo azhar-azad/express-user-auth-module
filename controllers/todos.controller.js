@@ -36,9 +36,12 @@ exports.getTodo = asyncHandler(async (req, res, next) => {
  *  @desc   Create new todo
  *  @method POST
  *  @route  /api/v1/todos
- *  @access Private
+ *  @access Private [Logged in user can create]
  * */
 exports.createTodo = asyncHandler(async (req, res, next) => {
+  // Add user to req.body to save in the database
+  req.body.user = req.user.id; // logged in user id
+
   const todo = await Todo.create(req.body);
 
   res
@@ -50,13 +53,20 @@ exports.createTodo = asyncHandler(async (req, res, next) => {
  *  @desc   Update todo
  *  @method PUT
  *  @route  /api/v1/todos/:id
- *  @access Private
+ *  @access Private [Logged in user and owner can edit]
  * */
 exports.updateTodo = asyncHandler(async (req, res, next) => {
   let todo = await Todo.findById(req.params.id);
 
   if (!todo) {
     return next(new ErrorResponse(`Todo not found with id of ${req.params.id}`, 404));
+  }
+
+  // Make sure user is this todo's owner
+  if (todo.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    // req.user is not the owner and also not an admin.
+    // admin can modify regardless of being the owner or not.
+    return next(new ErrorResponse(`User ${req.user.id} is not authorized to update this todo`, 401));
   }
 
   todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -70,13 +80,20 @@ exports.updateTodo = asyncHandler(async (req, res, next) => {
  *  @desc   Delete todo
  *  @method DELETE
  *  @route  /api/v1/todos/:id
- *  @access Private
+ *  @access Private [Logged in user and owner can delete]
  * */
 exports.deleteTodo = asyncHandler(async (req, res, next) => {
   const todo = await Todo.findById(req.params.id);
 
   if (!todo) {
     return next(new ErrorResponse(`Todo not found with id of ${req.params.id}`, 404));
+  }
+
+  // Make sure user is this todo's owner
+  if (todo.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    // req.user is not the owner and also not an admin.
+    // admin can modify regardless of being the owner or not.
+    return next(new ErrorResponse(`User ${req.user.id} is not authorized to update this todo`, 401));
   }
 
   todo.remove();

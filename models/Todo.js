@@ -23,11 +23,11 @@ const TodoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  // user: {
-  //   type: mongoose.Schema.ObjectId,
-  //   ref: 'User',
-  //   required: true
-  // }
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true
+  }
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -36,6 +36,6 @@ const TodoSchema = new mongoose.Schema({
 TodoSchema.pre('save', function(next) {
   this.slug = slugify(this.title, { lower: true });
   next();
-})
+});
 
 module.exports = mongoose.model('Todo', TodoSchema);
