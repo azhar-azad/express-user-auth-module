@@ -8,10 +8,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add full name']
   },
-  username: {
-    type: String,
-    trim: true
-  },
   slug: String,
   email: {
     type: String,
@@ -30,7 +26,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'owner'],
+    enum: ['user'],
     default: 'user'
   },
   resetPasswordToken: String,
@@ -43,9 +39,6 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', function(next) {
   this.slug = slugify(this.fullName, { lower: true });
-  if (!this.username) {
-    this.username = this.slug;
-  }
   next();
 });
 

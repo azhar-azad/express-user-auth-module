@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "60e707f5e23dededb363f0ee",
+    "role": "user",
+    "fullName": "John Doe",
+    "email": "john@gmail.com",
+    "password": "123456"
+  },
+  {
+    "_id": "60e7091be23dededb363f0f2",
+    "role": "user",
+    "fullName": "Jane Doe",
+    "email": "jane@gmail.com",
+    "password": "123456"
+  },
+  {
+    "_id": "60e70b17e23dededb363f0f5",
+    "role": "user",
+    "fullName": "Nabile Shahrin",
+    "email": "nabila@gmail.com",
+    "password": "123456"
+  },
+  {
+    "_id": "60e72a08bdfeae9bd9e3d326",
+    "role": "user",
+    "fullName": "Azhar Uddin",
+    "email": "azhar@gmail.com",
+    "password": "123456"
+  }
+]
