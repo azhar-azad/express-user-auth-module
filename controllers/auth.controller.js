@@ -55,7 +55,70 @@ exports.login = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
+/**
+ *  @desc   Get current logged in user
+ *  @method GET
+ *  @route  /api/v1/auth/me
+ *  @access Private [Logged in user can access]
+ * */
+exports.getMe = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
 
+  res
+    .status(200)
+    .json({ success: true, data: user });
+});
+
+/**
+ *  @desc   Update user details
+ *  @method PUT
+ *  @route  /api/v1/auth/updatedetails
+ *  @access Private [Logged in user can access]
+ * */
+exports.updateDetails = asyncHandler(async (req, res, next) => {
+  // Only update fullName and email.
+  // Won't update password or role.
+  let fieldsToUpdate = {};
+
+  if (req.body.fullName) {
+    fieldsToUpdate.fullName = req.body.fullName;
+  }
+  if (req.body.email) {
+    fieldsToUpdate.email = req.body.email;
+  }
+
+  const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+    new: true,
+    runValidators: true
+  });
+
+  res
+    .status(200)
+    .json({ success: true, data: user });
+});
+
+/**
+ *  @desc   Change password
+ *  @method PUT
+ *  @route  /api/v1/auth/changepassword
+ *  @access Private [Logged in user can access]
+ * */
+exports.changePassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('+password');
+
+  // Check current password
+  if (!(await user.matchPassword(req.body.currentPassword))) {
+    return next(new ErrorResponse('Password is incorrect', 401));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
+});
+
+
+/** Util Method **/
 // Get token from model, create cookie and send response
 // This is just a helper function
 // A token will be created and sent with json response when this function will be called

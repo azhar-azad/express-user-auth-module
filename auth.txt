@@ -4,8 +4,8 @@ Todo routes:
 POST    /todos      create      logged in user can create ------------------------- protect
 GET     /todos      get all     anyone can get all
 GET     /todos/:id  get one     anyone can get one
-PUT     /todos/:id  update      logged in user and owner can update --------------- protect, authorize(owner)
-DELETE  /todos/:id  delete      logged in user and owner can delete --------------- protect, authorize(owner)
+PUT     /todos/:id  update      logged in user and owner can update --------------- protect, authorize(user, admin)
+DELETE  /todos/:id  delete      logged in user and owner can delete --------------- protect, authorize(user, admin)
 
 User routes:
 POST    /users      create      logged in admin can create ------------------------ protect, authorize(admin)
