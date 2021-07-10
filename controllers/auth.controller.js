@@ -2,6 +2,7 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async.mw');
 const sendEmail = require('../utils/sendEmail');
+const crypto = require('crypto');
 
 /**
  *  @desc   Register user
@@ -166,6 +167,39 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     return next(new ErrorResponse('Email could not be sent', 500));
   }
+});
+
+/**
+ *  @desc   Reset password
+ *  @method PUT
+ *  @route  /api/v1/auth/resetpassword/:resettoken
+ *  @access Public [Anyone can access]
+ * */
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  // Get hashed token
+  const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
+
+  // Get user by hashed resettoken that is not expired
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return next(new ErrorResponse('Invalid token', 400));
+  }
+
+  // Set new password
+  user.password = req.body.password;
+
+  // Once the password is reset, we don't need token and expiration date
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  // Update the user with new fields
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
 });
 
 
