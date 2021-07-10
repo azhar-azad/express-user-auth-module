@@ -58,6 +58,13 @@ UserSchema.pre('save', async function (next) {
   this.password = await bcryptjs.hash(this.password, salt);
 });
 
+// Cascade delete todos when an user is deleted
+UserSchema.pre('remove', async function (next) {
+  console.log(`Todos being removed for user ${this._id}`);
+  await this.model('Todo').deleteMany({ user: this._id });
+  next();
+});
+
 // Sign JWT and return
 // Needed while registering a new user
 UserSchema.methods.getSignedJwtToken = function () {
@@ -87,7 +94,5 @@ UserSchema.methods.getResetPasswordToken = function () {
   // Return the original resetToken, not the hashed version
   return resetToken;
 }
-
-// Todo: Cascade delete todos when an user is deleted
 
 module.exports = mongoose.model('User', UserSchema);
